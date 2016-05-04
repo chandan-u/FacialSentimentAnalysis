@@ -8,6 +8,33 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D
 
 from keras.layers.core import Activation
 
+from keras.utils import np_utils
+
+import numpy as np
+
+
+# data Preporocessing
+# training_targets shape (35887, 7)     int   32
+# training_inputs  shape (35887, 2304)  float 32      
+import pandas as pd 
+csv_data = pd.read_csv('./data/fer2013/fer2013.csv')
+
+training_targets = csv_data.ix[:,0].values.astype('int32')
+training_targets = np_utils.to_categorical(training_targets) 
+
+
+training_inputs= []
+for value in csv_data.ix[:,1].values :
+    value = ( np.array(value.split()) ).astype('float32')
+
+    training_inputs.append(value)
+
+training_inputs = np.array(training_inputs)
+
+
+training_inputs = training_inputs.reshape(training_inputs.shape[0], 1, 48, 48)
+
+
 
 
 # image properties
@@ -33,3 +60,6 @@ model.add(
 # layer 1 activation function
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+
+
+
